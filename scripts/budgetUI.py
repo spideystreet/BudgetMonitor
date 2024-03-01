@@ -7,14 +7,19 @@ from budgetApp import BudgetApp  # Assurez-vous que cela correspond à votre str
 class BudgetUI:
     def __init__(self, budget_app):
         self.budget_app = budget_app
+        
         self.root = tk.Tk()
+        self.root.geometry("600x600")
+        self.depense_var = tk.StringVar(self.root)  # Ajouter cette ligne
+        self.recette_var = tk.StringVar(self.root)
         self.setup_ui()
-
+        self.depense_var.trace("w", self.check_fields)
+        self.recette_var.trace("w", self.check_fields)
     def setup_ui(self):
         # Champs de saisie pour les dépenses
         depense_label = tk.Label(self.root, text="Dépense :")
         depense_label.pack()
-        self.depense_entry = tk.Entry(self.root)
+        self.depense_entry = tk.Entry(self.root, textvariable=self.depense_var)  # Lier la variable
         self.depense_entry.pack()
 
         # Menu déroulant pour les catégories de dépenses
@@ -28,25 +33,54 @@ class BudgetUI:
         # Champs de saisie pour les recettes
         recette_label = tk.Label(self.root, text="Recette :")
         recette_label.pack()
-        self.recette_entry = tk.Entry(self.root)
+        self.recette_entry = tk.Entry(self.root, textvariable=self.recette_var)  # Lier la variable
         self.recette_entry.pack()
 
         # Boutons
-        ajouter_depense_button = tk.Button(self.root, text="Ajouter une dépense", command=self.ajouter_depense_callback)
-        ajouter_depense_button.pack()
-        ajouter_recette_button = tk.Button(self.root, text="Ajouter une recette", command=self.ajouter_recette_callback)
-        ajouter_recette_button.pack()
+        self.ajouter_depense_button = tk.Button(self.root, text="Ajouter une dépense", command=self.ajouter_depense_callback)
+        self.ajouter_depense_button.pack()
+
+        self.ajouter_recette_button = tk.Button(self.root, text="Ajouter une recette", command=self.ajouter_recette_callback)
+        self.ajouter_recette_button.pack()
+
+        # Initialiser les boutons avec l'état "disabled"
+        self.ajouter_depense_button.config(state="disabled")
+        self.ajouter_recette_button.config(state="disabled")
 
         # Étiquette pour afficher le solde actuel
         self.solde_label = tk.Label(self.root, text="Solde actuel : 0")
         self.solde_label.pack()
 
-        # Zone de graphique pour le camembert
-        self.fig = Figure(figsize=(6, 6))
-        self.ax = self.fig.add_subplot(111)
-        self.canvas = FigureCanvasTkAgg(self.fig, self.root)
-        self.canvas_widget = self.canvas.get_tk_widget()
-        self.canvas_widget.pack()
+
+
+
+
+
+
+    def check_fields(self, *args):
+        print("Checking fields...")
+        print("Depense entry:", self.depense_entry.get())
+        print("Recette entry:", self.recette_entry.get())
+
+        # Vérifier si les champs de dépense et de recette sont remplis
+        if self.depense_entry.get() and self.recette_entry.get():
+            print("Both fields are filled.")
+            self.ajouter_depense_button.config(state="active")
+            self.ajouter_recette_button.config(state="active")
+        elif self.depense_entry.get():
+            print("Only the depense field is filled.")
+            self.ajouter_depense_button.config(state="active")
+            self.ajouter_recette_button.config(state="disabled")
+        elif self.recette_entry.get():
+            print("Only the recette field is filled.")
+            self.ajouter_recette_button.config(state="active")
+            self.ajouter_depense_button.config(state="disabled")
+        else:
+            print("At least one field is empty.")
+            self.ajouter_depense_button.config(state="disabled")
+            self.ajouter_recette_button.config(state="disabled")
+
+
 
     def ajouter_depense_callback(self):
         montant = float(self.depense_entry.get())
@@ -61,18 +95,58 @@ class BudgetUI:
         self.afficher_solde()
         self.mettre_a_jour_graphique()
 
+            
+
+
+
+
     def afficher_solde(self):
         solde = self.budget_app.calculer_solde()
         self.solde_label.config(text=f"Solde actuel : {solde}")
 
     def mettre_a_jour_graphique(self):
-        self.ax.clear()  # Efface le tracé précédent
-        total_par_categorie = self.budget_app.calculer_total_par_categorie()
-        categories = list(total_par_categorie.keys())
-        montants = list(total_par_categorie.values())
-        self.ax.pie(montants, labels=categories, autopct='%1.1f%%')
-        self.canvas.draw()
+        self.fig = Figure(figsize=(6, 6))
+        self.ax = self.fig.add_subplot(111)
 
+        # Calculer les totaux par catégorie
+        total_par_categorie = self.budget_app.calculer_total_par_categorie()
+
+        # Créer des listes pour les catégories et les montants
+        categories_filtrees = []
+        montants_filtres = []
+
+        # Parcourir les catégories et les montants et les inclure dans les listes filtrées si le montant est non nul
+        for cat, montant in total_par_categorie.items():
+            if montant != 0:
+                categories_filtrees.append(cat)
+                montants_filtres.append(montant)
+
+        # Créer le graphique uniquement si des catégories filtrées sont présentes
+        if categories_filtrees:
+            self.ax.pie(montants_filtres, labels=categories_filtrees, autopct='%1.1f%%')
+
+            # Créer le canvas s'il n'existe pas encore
+            if not hasattr(self, 'canvas'):
+                self.canvas = FigureCanvasTkAgg(self.fig, self.root)
+                self.canvas_widget = self.canvas.get_tk_widget()
+                self.canvas_widget.pack()
+            else:
+                # Supprimer et recréer le canvas pour mettre à jour le graphique
+                self.canvas_widget.pack_forget()
+                self.canvas = FigureCanvasTkAgg(self.fig, self.root)
+                self.canvas_widget = self.canvas.get_tk_widget()
+                self.canvas_widget.pack()
+            self.canvas.draw()  # Mettre à jour le graphique
+        else:
+            # Afficher un message indiquant qu'il n'y a pas de données à afficher
+            no_data_label = tk.Label(self.root, text="Pas de données à afficher")
+            no_data_label.pack()
+
+
+
+
+
+    
     def run(self):
         self.root.mainloop()
 
