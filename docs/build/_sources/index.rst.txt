@@ -64,6 +64,38 @@ Pour modifier le code :
    source venv/bin/activate   #Charge l'env virtuel
    pip install -r BudgetMonitor/requirements.txt   #Installe les dépendances dans l'environnement
 
+Utilisation
+==================
+
+Cette section donnera les infos nécessaires pour utiliser BudgetMonitor.
+
+- Lancement de l'app
+
+.. code-block:: python
+
+   python scripts/main.py
+
+.. image:: ../build/_static/interface.png
+
+
+On peut ajouter deux choses : 
+
+- Des recettes
+- Des dépenses
+
+Plusieurs catégories sont là pour définir les dépenses : 
+
+- shopping
+- voiture
+- alimentation
+- loisirs
+
+
+Exemple : 500 de recette initiale et des dépenses aoutées à la main
+
+.. image:: ../build/_static/demo.png
+
+
 
 Notions fonctionnelle
 =====================
