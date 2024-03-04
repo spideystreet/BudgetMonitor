@@ -19,6 +19,12 @@ class BudgetApp:
         total_depenses = sum(sum(depenses) for depenses in self.categories.values())
         total_recettes = sum(self.recettes)
         return total_recettes - total_depenses
+    def exporter_donnees(self):
+        donnees = {
+            'categories': self.categories,
+            'recettes': self.recettes,
+        }
+        return donnees
 
     def calculer_total_par_categorie(self):
         return {categorie: sum(depenses) for categorie, depenses in self.categories.items()}
