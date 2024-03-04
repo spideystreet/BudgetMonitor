@@ -38,7 +38,6 @@ class BudgetUI:
         # Bouton pour ajouter une catégorie
         self.ajouter_categorie_button = tk.Button(self.root, text="Ajouter une catégorie", command=self.ajouter_categorie_callback)
         self.ajouter_categorie_button.pack()
-
         # Champs de saisie pour les recettes
         recette_label = tk.Label(self.root, text="Recette :")
         recette_label.pack()
@@ -52,6 +51,11 @@ class BudgetUI:
         self.ajouter_recette_button = tk.Button(self.root, text="Ajouter une recette", command=self.ajouter_recette_callback)
         self.ajouter_recette_button.pack()
 
+        # Bouton pour exporter les données
+        self.exporter_donnees_button = tk.Button(self.root, text="Exporter les données", command=self.exporter_donnees_callback)
+        self.exporter_donnees_button.pack()
+        
+
         # Initialiser les boutons avec l'état "disabled"
         self.ajouter_depense_button.config(state="disabled")
         self.ajouter_recette_button.config(state="disabled")
@@ -59,7 +63,6 @@ class BudgetUI:
         # Étiquette pour afficher le solde actuel
         self.solde_label = tk.Label(self.root, text="Solde actuel : 0")
         self.solde_label.pack()
-
 
 
     def ajouter_categorie_callback(self):
@@ -108,7 +111,18 @@ class BudgetUI:
         self.budget_app.ajouter_recette(montant)
         self.afficher_solde()
         self.mettre_a_jour_graphique()
+    def exporter_donnees_callback(self):
+        donnees = self.budget_app.exporter_donnees()
+        # csv
+        with open('donnees.csv', 'w') as f:
+            f.write("categorie,depense\n")
+            for recette in donnees['recettes']:
+                f.write(f"recette,{recette}\n")
+            for categorie, depenses in donnees['categories'].items():
+                for depense in depenses:
+                    f.write(f"{categorie},{depense}\n")
 
+    
             
 
 
