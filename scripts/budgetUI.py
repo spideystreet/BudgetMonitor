@@ -2,15 +2,21 @@ import tkinter as tk
 from tkinter import ttk
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from budgetApp import BudgetApp  # Assurez-vous que cela correspond à votre structure de fichiers
+from budgetApp import BudgetApp
+import tkinter.simpledialog as simpledialog
 
 class BudgetUI:
     def __init__(self, budget_app):
+        self.categories = {} 
         self.budget_app = budget_app
         
         self.root = tk.Tk()
+        self.root.title("Gestion de budget")
+        self.root.iconbitmap("logo.ico")
         self.root.geometry("600x600")
-        self.depense_var = tk.StringVar(self.root)  # Ajouter cette ligne
+        #Bloquer la redimensionnement de la fenêtre
+        self.root.resizable(False, False)
+        self.depense_var = tk.StringVar(self.root)
         self.recette_var = tk.StringVar(self.root)
         self.setup_ui()
         self.depense_var.trace("w", self.check_fields)
@@ -29,6 +35,9 @@ class BudgetUI:
         self.categorie_var.set("shopping")  # valeur par défaut
         self.categorie_menu = ttk.Combobox(self.root, textvariable=self.categorie_var, values=list(self.budget_app.categories.keys()))
         self.categorie_menu.pack()
+        # Bouton pour ajouter une catégorie
+        self.ajouter_categorie_button = tk.Button(self.root, text="Ajouter une catégorie", command=self.ajouter_categorie_callback)
+        self.ajouter_categorie_button.pack()
 
         # Champs de saisie pour les recettes
         recette_label = tk.Label(self.root, text="Recette :")
@@ -53,7 +62,12 @@ class BudgetUI:
 
 
 
-
+    def ajouter_categorie_callback(self):
+        nouvelle_categorie = simpledialog.askstring("Nouvelle Catégorie", "Entrez le nom de la nouvelle catégorie:")
+        if nouvelle_categorie:
+            if nouvelle_categorie not in self.budget_app.categories:
+                self.budget_app.categories[nouvelle_categorie] = []
+                self.categorie_menu['values'] = list(self.budget_app.categories.keys())
 
 
 
@@ -141,16 +155,10 @@ class BudgetUI:
             # Afficher un message indiquant qu'il n'y a pas de données à afficher
             no_data_label = tk.Label(self.root, text="Pas de données à afficher")
             no_data_label.pack()
-
-
-
-
-
     
     def run(self):
         self.root.mainloop()
 
-# Test
 if __name__ == "__main__":
     app = BudgetApp()
     ui = BudgetUI(app)
