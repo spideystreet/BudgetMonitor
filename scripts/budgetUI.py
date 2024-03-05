@@ -114,19 +114,15 @@ class BudgetUI:
     def exporter_donnees_callback(self):
         donnees = self.budget_app.exporter_donnees()
         # csv
+        i=1
         with open('donnees.csv', 'w') as f:
             f.write("categorie,depense\n")
             for recette in donnees['recettes']:
-                f.write(f"recette,{recette}\n")
+                f.write(f"recette{str(i)},{recette} \n")
+                i=i+1
             for categorie, depenses in donnees['categories'].items():
                 for depense in depenses:
                     f.write(f"{categorie},{depense}\n")
-
-    
-            
-
-
-
 
     def afficher_solde(self):
         solde = self.budget_app.calculer_solde()
