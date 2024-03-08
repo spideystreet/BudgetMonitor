@@ -12,6 +12,34 @@ Introduction
 
 BudgetMonitor est une petite application avec interface graphique développée en Python et utilisant un maximum de notions de programmation fonctionnelle.
 
+
+Les technos utilisées sont :
+
+
+
+- **Python** : Le langage de programmation utilisé
+
+
+- **Tkinter** : Une bibliothèque standard de Python pour créer des interfaces graphiques utilisateur (GUI). Elle est utilisée dans **budgetUI.py** pour construire et gérer l'interface utilisateur de l'application.
+
+
+
+- **Matplotlib** : Une bibliothèque de traçage en Python, utilisée conjointement avec Tkinter dans budgetUI.py pour générer des graphiques visuels des dépenses. Plus précisément, Figure et FigureCanvasTkAgg de Matplotlib sont utilisés pour intégrer les graphiques dans l'interface utilisateur Tkinter.
+
+
+
+- **Concepts de programmation orientée objet (POO)** : Utilisés pour structurer votre application en classes et méthodes, facilitant ainsi l'organisation du code et la réutilisation des composants.
+
+
+
+- **Programmation événementielle** : Principalement à travers l'utilisation de Tkinter, où les interactions de l'utilisateur avec l'interface graphique déclenchent des événements qui sont gérés par des fonctions ou des méthodes définies du script.
+
+
+
+- **Fonctionnalités de programmation fonctionnelle** : Telles que l'utilisation de fonctions de haut niveau (comme sum), compréhensions de listes et de dictionnaires, illustrant l'utilisation de concepts de programmation fonctionnelle au sein d'un paradigme principalement orienté objet.
+
+
+
 Fonctionnalités
 ===============
 
@@ -109,32 +137,29 @@ Plusieurs notions de programmation fonctionnelle sont utilisées ici.
 
 .. code-block:: python
 
-    def calculer_solde(self):
-        # Calcul du total des dépenses et des recettes
-        total_depenses = sum(self.depenses)
-        total_recettes = sum(self.recettes)
-        # Calcul du solde actuel
-        return total_recettes - total_depenses
+      def calculer_total_par_categorie(self):
+         return {categorie: sum(depenses) for categorie, depenses in self.categories.items()}
 
 2. Immutabilité :
 
-- BudgetApp.py :
+- budgetApp.py :
 
 .. code-block:: python
 
-         #  Utilisations de la fonction sum()
-         self.depenses.append(montant)
-         self.recettes.append(montant)
+      self.depense_var.trace("w", self.check_fields)
+
 
 1. Fonctions comme des citoyens de premiere classe :
 
-- BudgetUI.py :
+- budgetUI.py :
   
 .. code-block:: python
 
-         #  Passage en argument des fonctions aux boutons Tkinter
-         ajouter_depense_button = tk.Button(self.root, text="Ajouter une dépense", command=self.ajouter_depense_callback)
-         ajouter_recette_button = tk.Button(self.root, text="Ajouter une recette", command=self.ajouter_recette_callback)
+      def calculer_solde(self):
+         total_depenses = sum(sum(depenses) for depenses in self.categories.values())
+         total_recettes = sum(self.recettes)
+            return total_recettes - total_depenses
+
 
 
 

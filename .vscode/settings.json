@@ -1,3 +1,4 @@
 {
-    "restructuredtext.preview.name": "docutils"
+    "restructuredtext.preview.name": "docutils",
+    "esbonio.sphinx.confDir": ""
 }

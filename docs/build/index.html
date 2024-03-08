@@ -87,6 +87,15 @@
 <section id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading"></a></h2>
 <p>BudgetMonitor est une petite application avec interface graphique développée en Python et utilisant un maximum de notions de programmation fonctionnelle.</p>
+<p>Les technos utilisées sont :</p>
+<ul class="simple">
+<li><p><strong>Python</strong> : Le langage de programmation utilisé</p></li>
+<li><p><strong>Tkinter</strong> : Une bibliothèque standard de Python pour créer des interfaces graphiques utilisateur (GUI). Elle est utilisée dans <strong>budgetUI.py</strong> pour construire et gérer l’interface utilisateur de l’application.</p></li>
+<li><p><strong>Matplotlib</strong> : Une bibliothèque de traçage en Python, utilisée conjointement avec Tkinter dans budgetUI.py pour générer des graphiques visuels des dépenses. Plus précisément, Figure et FigureCanvasTkAgg de Matplotlib sont utilisés pour intégrer les graphiques dans l’interface utilisateur Tkinter.</p></li>
+<li><p><strong>Concepts de programmation orientée objet (POO)</strong> : Utilisés pour structurer votre application en classes et méthodes, facilitant ainsi l’organisation du code et la réutilisation des composants.</p></li>
+<li><p><strong>Programmation événementielle</strong> : Principalement à travers l’utilisation de Tkinter, où les interactions de l’utilisateur avec l’interface graphique déclenchent des événements qui sont gérés par des fonctions ou des méthodes définies du script.</p></li>
+<li><p><strong>Fonctionnalités de programmation fonctionnelle</strong> : Telles que l’utilisation de fonctions de haut niveau (comme sum), compréhensions de listes et de dictionnaires, illustrant l’utilisation de concepts de programmation fonctionnelle au sein d’un paradigme principalement orienté objet.</p></li>
+</ul>
 </section>
 <section id="fonctionnalites">
 <h2>Fonctionnalités<a class="headerlink" href="#fonctionnalites" title="Link to this heading"></a></h2>
@@ -175,34 +184,29 @@
 <ul class="simple">
 <li><p>BudgetApp.py :</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">calculer_solde</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="c1"># Calcul du total des dépenses et des recettes</span>
-    <span class="n">total_depenses</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">depenses</span><span class="p">)</span>
-    <span class="n">total_recettes</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">recettes</span><span class="p">)</span>
-    <span class="c1"># Calcul du solde actuel</span>
-    <span class="k">return</span> <span class="n">total_recettes</span> <span class="o">-</span> <span class="n">total_depenses</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">calculer_total_par_categorie</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+   <span class="k">return</span> <span class="p">{</span><span class="n">categorie</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="n">depenses</span><span class="p">)</span> <span class="k">for</span> <span class="n">categorie</span><span class="p">,</span> <span class="n">depenses</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
 </pre></div>
 </div>
 <ol class="arabic simple" start="2">
 <li><p>Immutabilité :</p></li>
 </ol>
 <ul class="simple">
-<li><p>BudgetApp.py :</p></li>
+<li><p>budgetApp.py :</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#  Utilisations de la fonction sum()</span>
-<span class="bp">self</span><span class="o">.</span><span class="n">depenses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">montant</span><span class="p">)</span>
-<span class="bp">self</span><span class="o">.</span><span class="n">recettes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">montant</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">depense_var</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_fields</span><span class="p">)</span>
 </pre></div>
 </div>
 <ol class="arabic simple">
 <li><p>Fonctions comme des citoyens de premiere classe :</p></li>
 </ol>
 <ul class="simple">
-<li><p>BudgetUI.py :</p></li>
+<li><p>budgetUI.py :</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#  Passage en argument des fonctions aux boutons Tkinter</span>
-<span class="n">ajouter_depense_button</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Ajouter une dépense&quot;</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ajouter_depense_callback</span><span class="p">)</span>
-<span class="n">ajouter_recette_button</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Ajouter une recette&quot;</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ajouter_recette_callback</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">calculer_solde</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+   <span class="n">total_depenses</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">depenses</span><span class="p">)</span> <span class="k">for</span> <span class="n">depenses</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">categories</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+   <span class="n">total_recettes</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">recettes</span><span class="p">)</span>
+      <span class="k">return</span> <span class="n">total_recettes</span> <span class="o">-</span> <span class="n">total_depenses</span>
 </pre></div>
 </div>
 </section>
